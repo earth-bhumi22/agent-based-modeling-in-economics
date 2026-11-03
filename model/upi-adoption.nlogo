@@ -310,13 +310,13 @@ to-report all-adopted?
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
-315
-10
-892
-610
+288
+16
+784
+535
 -1
 -1
-7.0
+6.0
 1
 12
 1
@@ -337,40 +337,40 @@ Time step (weeks)
 30.0
 
 TEXTBOX
+12
 10
-8
-305
-32
+272
+36
 UPI ADOPTION SIMULATOR
 18
 105.0
 1
 
 TEXTBOX
-10
-34
-305
-64
+12
+36
+274
+70
 Agent-based Bass diffusion model of digital-payment adoption on a social network
 10
 4.0
 1
 
 TEXTBOX
-10
-72
-305
-90
+12
+74
+274
+95
 1 | POPULATION & SOCIAL NETWORK
 11
 103.0
 1
 
 SLIDER
-10
-92
-305
-125
+12
+98
+273
+131
 num-agents
 num-agents
 100
@@ -382,20 +382,20 @@ people
 HORIZONTAL
 
 CHOOSER
-10
-128
-305
-173
+12
+136
+273
+181
 network-type
 network-type
 "Small-world" "Random" "Scale-free (influencers)" "Fully mixed (classical Bass)"
 0
 
 SLIDER
-10
-176
-305
-209
+12
+187
+273
+220
 avg-links
 avg-links
 1
@@ -406,58 +406,21 @@ avg-links
 friends
 HORIZONTAL
 
-SLIDER
-10
-212
-305
-245
-rewire-prob
-rewire-prob
-0
-1
-0.1
-0.05
-1
-NIL
-HORIZONTAL
-
-SWITCH
-10
-248
-155
-281
-show-links?
-show-links?
-0
-1
--1000
-
-SWITCH
-160
-248
-305
-281
-heterogeneous?
-heterogeneous?
-1
-1
--1000
-
 TEXTBOX
-10
-290
-305
-308
+12
+230
+273
+250
 2 | BEHAVIOUR  (Pr = p + q x A)
 11
 103.0
 1
 
 SLIDER
-10
-310
-305
-343
+12
+252
+273
+285
 p
 p
 0
@@ -469,10 +432,10 @@ ads
 HORIZONTAL
 
 SLIDER
-10
-346
-305
-379
+12
+291
+273
+324
 q
 q
 0
@@ -484,40 +447,40 @@ friends
 HORIZONTAL
 
 TEXTBOX
-10
-388
-305
-406
+12
+335
+273
+354
 3 | POLICY EXPERIMENTS
 11
 103.0
 1
 
 CHOOSER
-10
-408
-305
-453
+12
+358
+273
+403
 policy
 policy
 "None" "Advertising campaign (p x3)" "Referral cashback (q x2)" "Ads + cashback"
 0
 
 CHOOSER
-10
-456
-305
-501
+12
+409
+273
+454
 seed-strategy
 seed-strategy
 "None" "Random people" "Top influencers"
 0
 
 SLIDER
-10
-504
-305
-537
+12
+460
+273
+493
 num-seeds
 num-seeds
 0
@@ -529,10 +492,10 @@ seeds
 HORIZONTAL
 
 BUTTON
-10
-548
-100
-593
+12
+509
+140
+555
 Setup
 setup
 NIL
@@ -546,10 +509,10 @@ NIL
 1
 
 BUTTON
-105
-548
-210
-593
+146
+509
+273
+555
 Go
 go
 T
@@ -562,88 +525,71 @@ NIL
 NIL
 0
 
-BUTTON
-215
-548
-305
-593
-Step
-go
-NIL
-1
-T
-OBSERVER
-NIL
-T
-NIL
-NIL
-1
-
 TEXTBOX
-10
-600
-305
-616
+12
+565
+270
+582
 LEGEND
 10
 0.0
 1
 
 TEXTBOX
-10
-616
-305
-632
-● Grey: not using UPI yet
+12
+583
+138
+601
+● Grey: Not adopted
 10
 3.0
 1
 
 TEXTBOX
-10
-632
-305
-648
-● Blue: adopted because of advertising (p)
+138
+583
+274
+601
+● Blue: Advertising
 10
 104.0
 1
 
 TEXTBOX
-10
-648
-305
-664
-● Green: adopted because friends use it (q)
+12
+605
+150
+625
+● Green: Friends
 10
 54.0
 1
 
 TEXTBOX
-10
-664
-305
-680
-● Gold: seed user / influencer
+150
+605
+274
+625
+● Gold: Seeded user
 10
 44.0
 1
 
 TEXTBOX
-10
-680
-305
-712
+12
+629
+273
+664
 Bright flash = adopted this week.  Bigger dot = more friends.
 10
 3.0
 1
 
 MONITOR
-315
-622
-407
-677
+288
+543
+448
+597
 % on UPI
 pct-adopted
 1
@@ -651,10 +597,10 @@ pct-adopted
 13
 
 MONITOR
-410
-622
-502
-677
+454
+543
+614
+597
 Users
 num-adopters
 0
@@ -662,10 +608,10 @@ num-adopters
 13
 
 MONITOR
-505
-622
+620
+543
+780
 597
-677
 Week
 ticks
 0
@@ -673,10 +619,10 @@ ticks
 13
 
 MONITOR
-600
-622
-692
-677
+288
+604
+448
+657
 50% week
 time-to-50-label
 0
@@ -684,65 +630,10 @@ time-to-50-label
 13
 
 MONITOR
-695
-622
-787
-677
-Peak week
-peak-tick
-0
-1
-13
-
-MONITOR
-790
-622
-882
-677
-Avg links
-avg-degree
-1
-1
-13
-
-MONITOR
-315
-682
-407
-727
-Via ads %
-pct-via "ads"
-1
-1
-12
-
-MONITOR
-410
-682
-502
-727
-Via friends %
-pct-via "wom"
-1
-1
-12
-
-MONITOR
-505
-682
-597
-727
-Seeded %
-pct-via "seed"
-1
-1
-12
-
-MONITOR
-600
-682
-692
-727
+454
+604
+614
+657
 New: ads
 new-by-ads
 0
@@ -750,32 +641,21 @@ new-by-ads
 12
 
 MONITOR
-695
-682
-787
-727
+620
+604
+780
+657
 New: friends
 new-by-wom
 0
 1
 12
 
-MONITOR
-790
-682
-882
-727
-Bass eq. %
-100 * bass-F
-1
-1
-12
-
 PLOT
-902
-10
-1462
-245
+802
+16
+1391
+262
 S-curve: % of population using UPI
 weeks
 % adopted
@@ -791,10 +671,10 @@ PENS
 "Classical Bass equation" 1.0 0 -1015276 true "" "plot 100 * bass-F"
 
 PLOT
-902
-250
-1462
-470
+802
+274
+1391
+524
 New users per week: ads vs friends
 weeks
 new users
@@ -810,42 +690,72 @@ PENS
 "Via advertising (innovators)" 1.0 0 -14775066 true "" "plot new-by-ads"
 "Via friends (imitators)" 1.0 0 -14109606 true "" "plot new-by-wom"
 
-PLOT
-902
-475
-1462
-650
-Network: how many friends people have
-number of friends
-people
-0
-15
-0
-100
-true
-true
-"" ""
-PENS
-"people" 1.0 1 -8892216 true "" "if any? links [ set-plot-x-range 0 (max [count my-links] of turtles + 2) ] histogram [count my-links] of turtles"
+TEXTBOX
+814
+549
+1382
+568
+MAIN QUESTION  /  HOW DOES UPI SPREAD?
+12
+103.0
+1
 
-PLOT
-902
-655
-1462
-727
-Adoption rate of remaining non-users (Eq. 7.7)
-weeks
-rate
+TEXTBOX
+814
+575
+1378
+639
+One dot = one person. Blue = adopted from external influence; green = adopted from peers. Compare the S-curve and weekly adoption to explain how individual decisions create market growth.
+12
+4.0
+1
+
+TEXTBOX
+12
+710
+800
+730
+ADVANCED SETTINGS | unchanged model logic (scroll down only if needed)
+11
+103.0
+1
+
+SLIDER
+12
+737
+274
+770
+rewire-prob
+rewire-prob
 0
-30
-0
-0.5
-true
-true
-"" ""
-PENS
-"ABM: new / remaining" 1.0 0 -14109606 true "" "if ticks > 0 and fraction-adopted < 0.97 [ plot hazard ]"
-"Theory: p + q*F(t)" 1.0 0 -1015276 true "" "if ticks > 0 and fraction-adopted < 0.97 [ plot bass-hazard ]"
+1
+0.1
+0.05
+1
+NIL
+HORIZONTAL
+
+SWITCH
+281
+737
+445
+770
+show-links?
+show-links?
+1
+1
+-1000
+
+SWITCH
+453
+737
+627
+770
+heterogeneous?
+heterogeneous?
+1
+1
+-1000
 @#$#@#$#@
 ## WHAT IS IT?
 
@@ -889,15 +799,14 @@ The **orange line** in the S-curve plot is the classical aggregate Bass equation
 1. Choose the population size, network type and average number of friends.
 2. Set **p** (advertising) and **q** (word-of-mouth). The defaults p = 0.03, q = 0.4, n = 5 are the book's reference values, and also typical empirical values (Mahajan, Muller & Bass, 1995).
 3. Optionally choose a **policy** or a **seed strategy**.
-4. Press **Setup**, then **Go**. Use **Step** to advance one week at a time.
+4. Press **Setup**, then **Go**. For each experiment change parameters and press **Setup** again.
 
-**Monitors:** % using UPI, the week in which 50% adoption was reached (the book's key output), the peak week of new adoptions, and the share of users who came via ads, via friends, or as seeds.
+**Monitors:** % using UPI, current number of users, current week, first week reaching 50% adoption, new adopters via ads, and new adopters via friends.
 
 **Plots:**
 1. **S-curve**: cumulative adoption, ABM vs. classical Bass equation.
 2. **New users per week**: the bell-shaped curve, split into innovators and imitators.
-3. **Network degree distribution**: how many friends people have.
-4. **Average friends of users vs. non-users**: well-connected people adopt earlier.
+Advanced network settings are below the main dashboard; the model and BehaviorSpace experiments are unchanged.
 
 ## THINGS TO NOTICE
 
@@ -913,7 +822,7 @@ The **orange line** in the S-curve plot is the classical aggregate Bass equation
 * **Connectivity:** move avg-links from 1 to 30. Beyond about **6 friends** the result barely changes (book, Fig. 7.2).
 * **Policy:** compare an advertising campaign with referral cashback. Which policy reaches 50% sooner?
 * **Influencers:** choose the scale-free network, set p very low (0.005), and compare seeding 10 *random people* with seeding the 10 *top influencers*.
-* **Heterogeneity:** switch on `heterogeneous?` so people have different p and q.
+* **Heterogeneity:** the `heterogeneous?` control is in the advanced settings section beneath the main dashboard; keep it off for baseline experiments.
 
 ## EXTENDING THE MODEL
 
@@ -938,6 +847,13 @@ Uses `layout-spring` for network layouts, `min-n-of` for nearest-neighbour links
 * Mahajan, V., Muller, E. & Bass, F. M. (1995). Diffusion of New Products: Empirical Generalizations and Managerial Uses. *Marketing Science*, 14(3).
 * Watts, D. J. & Strogatz, S. H. (1998). Collective dynamics of 'small-world' networks. *Nature*, 393, 440–442.
 * Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo/. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
+
+
+## CLASSROOM DASHBOARD
+
+The main screen intentionally contains two plots and six monitors. The advanced controls `rewire-prob`, `show-links?`, and `heterogeneous?` remain as widgets below the main view because the original model and all seven BehaviorSpace experiments depend on them. Default `show-links?` is OFF to make the network readable. They are not deleted from the model.
+
+**Model limitation:** The adoption coefficients are illustrative parameters from diffusion literature, not estimates from UPI user data. The model does not estimate advertising cost or real-world ROI.
 @#$#@#$#@
 default
 true
