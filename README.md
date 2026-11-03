@@ -7,14 +7,17 @@
 | **Course** | B.Tech Computer Science Engineering |
 | **Year / Semester** | 2nd Year, Semester 3 |
 | **Project Type** | Agent-Based **Simulation** (a NetLogo model — not a website or an app) |
-| **Tool** | [NetLogo](https://ccl.northwestern.edu/netlogo/) (desktop) / NetLogo Web |
+| **Tool** | [NetLogo](https://ccl.northwestern.edu/netlogo/) 6.4 (desktop) |
+| **Status** | ✅ Working simulation · ✅ Experiments run · ⏳ Validation & report |
 | **Reference Book** | Delli Gatti, Fagiolo, Gallegati, Richiardi & Russo (eds.), *Agent-Based Models in Economics: A Toolkit*, Cambridge University Press, 2018 |
+
+![UPI Adoption Simulator: adoption taking off on a small-world network](screenshots/02-takeoff-small-world.png)
 
 ---
 
 ## 1. What is this project? (In one paragraph)
 
-This project is a **computer simulation of an economy made of individual people (agents)** who decide, one by one, whether to start using a new product — here, **UPI / digital payments**. Each person is influenced by two things: **advertising** (an outside push) and **their friends and neighbours who already use it** (word-of-mouth). We don't write an equation for the whole market. We only program the rules for *one* person, put 1,000 of them on a social network, press **Go**, and watch the market-wide adoption curve **emerge** from their interactions. The model is the agent-based version of the **Bass diffusion model**, which our reference book works through in Chapter 7 (Section 7.3.4).
+This project is a **computer simulation of an economy made of individual people (agents)** who decide, one by one, whether to start using a new product — here, **UPI / digital payments**. Each person is influenced by two things: **advertising** (an outside push) and **their friends who already use it** (word-of-mouth). We don't write an equation for the whole market. We only program the rules for *one* person, put 1,000 of them on a social network, press **Go**, and watch the market-wide adoption curve **emerge** from their interactions. The model is the agent-based version of the **Bass diffusion model**, which our reference book works through in Chapter 7 (Section 7.3.4).
 
 ---
 
@@ -40,9 +43,9 @@ The reference book explains (Ch. 1, 2 and 7) why this is unrealistic. Real peopl
 We build an **Agent-Based Model (ABM)** in NetLogo where:
 
 - **Agents** = individual people (potential users of UPI).
-- **Environment** = a **social network** that links agents to their friends (small-world, random, or fully connected).
-- **State of each agent** = `adopted?` (0 = not using UPI, 1 = using UPI).
-- **Behavioural rule** (from the book, Eq. 7.9): at every time step, a non-adopter *i* adopts with probability
+- **Environment** = a **social network** linking agents to their friends.
+- **State of each agent** = `adopted?` (not using / using UPI) and `adopted-via` (ads, friends, or seed).
+- **Behavioural rule** (from the book, Eq. 7.9): every week, a non-user *i* adopts with probability
 
 $$
 \Pr_{i,t}(\text{adopt}) = p + q \cdot A_{i,t}
@@ -52,93 +55,115 @@ $$
 |---|---|---|
 | `p` | Innovation coefficient | External influence: **advertising**, media, government campaigns |
 | `q` | Imitation coefficient | Internal influence: **word-of-mouth**, peer pressure, social learning |
-| `A(i,t)` | Share of agent *i*'s friends who have already adopted | **Local interaction** (replaces the global term F(t) of the classical model) |
-| `n` | Average number of links per agent | How socially connected people are |
+| `A(i,t)` | Share of agent *i*'s friends who already use UPI | **Local interaction** (replaces the global term F(t) of the classical model) |
+| `n` | Average number of friends per agent | How socially connected people are |
 
 Nobody in the model "solves" an optimisation problem. Agents follow a **simple heuristic**: "I may try it because I saw an ad, and I'm more likely to try it if my friends use it." This is the **bounded rationality / social learning** view of behaviour from Ch. 5 of the book.
 
 The **S-shaped adoption curve** of the market is not programmed anywhere. It **emerges** from these micro-level interactions. That emergence is the central idea of agent-based economics.
 
 ### What we add beyond the book's example
-1. **Network choice:** compare *fully connected* (= classical Bass), *random*, and *small-world* networks.
-2. **Heterogeneous agents:** each agent can get its own innovativeness `p_i` (drawn around the average `p`), so people are not identical.
-3. **Policy experiments:**
-   - 📢 **Advertising campaign:** raise `p`
-   - 🤝 **Referral cashback:** raise `q`
-   - ⭐ **Seeding influencers:** start with a few early adopters placed on the *most-connected* agents vs. *random* agents
+1. **Four network types:** small-world (the book's case), random, scale-free (with big "influencers"), and fully mixed (= the classical Bass equation).
+2. **Live comparison with the classical equation:** the S-curve plot draws the ABM and the aggregate Bass equation side by side.
+3. **Innovators vs. imitators:** every adopter is coloured by *why* they adopted (ads = blue, friends = green).
+4. **Heterogeneous agents:** each agent can get its own `p_i` and `q_i`.
+5. **Policy experiments:** 📢 advertising campaign (p × 3), 🤝 referral cashback (q × 2), both together, and ⭐ seeding the top influencers vs. random people.
 
 ---
 
-## 4. What the Simulation Looks Like (NetLogo Interface)
+## 4. The Simulation
 
-**Controls (sliders / choosers)**
+### Interface
 
-| Widget | Default | Purpose |
+| Area | What it contains |
+|---|---|
+| **Left panel** | 1. Population & network (size, network type, avg friends, rewiring, show links, heterogeneity) · 2. Behaviour (`p`, `q`) · 3. Policy experiments (policy, seed strategy, number of seeds) · **Setup / Go / Step** buttons · colour legend |
+| **Centre** | Live network view: each dot is a person. Grey = not using UPI · **blue** = adopted because of ads · **green** = adopted because of friends · **gold** = seeded influencer · bright flash = adopted this week · bigger dot = more friends |
+| **Below the view** | 12 live monitors: % on UPI, users, week, **week when 50% adopted**, peak week, avg links, % of users via ads / friends / seeds, new users this week, classical Bass % |
+| **Right panel** | 4 plots: (1) **S-curve**, ABM vs. classical Bass equation · (2) **new users per week**, split into innovators and imitators · (3) **degree distribution** of the network · (4) **adoption rate** of remaining non-users vs. the theoretical `p + q·F(t)` (book, Eq. 7.7) |
+
+*Default values are the book's reference configuration: p = 0.03, q = 0.4, n = 5, 1,000 agents.*
+
+### Screenshots (taken from the real NetLogo model)
+
+| Week 0: Setup | Week 7: Take-off | Week 22: Saturation |
 |---|---|---|
-| `num-agents` | 1000 | Population size |
-| `p` (innovation) | 0.03 | Advertising effect |
-| `q` (imitation) | 0.40 | Word-of-mouth effect |
-| `avg-links` (n) | 5 | Average friends per agent |
-| `rewire-prob` | 0.1 | Small-world randomness |
-| `network-type` | small-world | small-world / random / fully-connected |
-| `heterogeneous?` | off | Give each agent a different `p_i` |
-| `seed-strategy` | none | none / random / influencers |
-| **Setup**, **Go** buttons | | Build the network, run the simulation |
+| ![setup](screenshots/01-setup-small-world.png) | ![takeoff](screenshots/02-takeoff-small-world.png) | ![saturation](screenshots/03-saturation-small-world.png) |
 
-*Default values are the book's reference configuration (p = 0.03, q = 0.4, n = 5, 1,000 agents).*
-
-**Outputs**
-
-- 🟢 / ⚪ **Network view:** agents turn from grey (non-adopter) to green (adopter) as UPI spreads.
-- 📈 **Plot 1, Cumulative adoption:** the S-curve (% of population using UPI over time).
-- 📊 **Plot 2, New adopters per tick:** the bell-shaped curve of adoption speed.
-- 🔢 **Monitors:** % adopted, current tick, and the **tick at which 50% of people have adopted** (our key output, same as in the book).
+| Scale-free network seeded with top influencers (gold, centre) | Policy: advertising campaign (p × 3) |
+|---|---|
+| ![influencers](screenshots/04-influencers-scale-free.png) | ![policy](screenshots/05-policy-advertising.png) |
 
 ---
 
-## 5. Model Logic (Pseudocode)
+## 5. Model Logic
 
 ```
 SETUP
-  create num-agents people, all with adopted? = false
-  build the social network (small-world / random / fully-connected) with avg-links = n
-  if heterogeneous?  → give each person p_i drawn around p
-  if seed-strategy   → mark a few seed agents as adopters
+  create num-agents people (not using UPI)
+  build the social network: small-world / random / scale-free / fully mixed
+  apply policy               → effective p and q
+  if heterogeneous?          → each person gets own p_i, q_i
+  if seed-strategy           → a few random people or top influencers start as users
 
-GO  (repeat every tick, until everyone has adopted)
-  ask every non-adopter i:
-      A_i  ← (number of adopted friends) / (number of friends)
-      prob ← p_i + q × A_i
-      if random-float 1 < prob  → set adopted? true, turn green
-  update plots and monitors
-  if 50% adopted for the first time → record tick as time-to-50%
+GO  (every week, until everyone uses UPI)
+  for every non-user i (decisions based on the state at the START of the week):
+      A_i ← share of i's friends using UPI      (whole population if fully mixed)
+      r   ← random number in [0, 1)
+      if r < p_i              → adopts "because of ads"     (innovator, blue)
+      else if r < p_i + q_i·A_i → adopts "because of friends" (imitator, green)
+  apply all decisions together (synchronous update)
+  update the classical Bass equation  F ← F + (1 − F)(p + qF)  for comparison
+  update plots and monitors; record the week when 50% have adopted
 ```
 
-This is exactly the **recursive structure of an AB model** described in Ch. 3:
+This is the **recursive structure of an AB model** described in Ch. 3:
 `x(i, t+1) = f( x(i,t), x(−i,t), θ, ξ(i,t) )`: each agent's next state depends on its own state, its neighbours' states, the parameters θ = (p, q, n), and randomness ξ.
 
 ---
 
-## 6. Experiments We Will Run
+## 6. Experiments & Results
 
-Using NetLogo's **BehaviorSpace** tool, following the **sensitivity analysis** method of Ch. 7:
+All experiments are built into the model (**Tools → BehaviorSpace**, experiments E1–E7). Each configuration is repeated many times and averaged, because the model is stochastic. This follows the sensitivity-analysis method of Ch. 7. Raw outputs are in [`experiments/results/`](experiments/results).
 
-| # | Experiment | What we vary | What we measure |
-|---|---|---|---|
-| E1 | Baseline | p = 0.03, q = 0.4, n = 5 | S-curve, time to 50% adoption |
-| E2 | Advertising effect | `p` from 0 to 0.2 | Time to 50% |
-| E3 | Word-of-mouth effect | `q` from 0 to 1 | Time to 50% |
-| E4 | Connectivity effect | `n` from 1 to 30 | Time to 50% |
-| E5 | Network structure | fully-connected vs. random vs. small-world | Shape of S-curve |
-| E6 | Policy comparison | Ads vs. cashback vs. influencer seeding | Time to 50% |
+**Key output:** the week in which **50% of the population** uses UPI (the book's main output statistic). Lower = faster adoption.
 
-Each configuration is repeated over **multiple runs (e.g., 50)** and averaged, because the model is stochastic. This is the method the book uses.
+### E6: Which policy works best? *(small-world, 30 runs each)*
 
-**Expected results (based on the book's findings, Ch. 7.3.4)**
-- `p` (advertising) has the **strongest** effect on speed, especially when `p` is small.
-- Raising `q` helps, but beyond a point the curves become very similar.
-- Beyond about **6 links per agent**, adding more connections barely changes the result.
-- Every run eventually reaches 100% adoption (when p > 0). The interesting part is **how fast** the market gets there.
+| Policy | Weeks to 50% adoption | Weeks until everyone adopts |
+|---|---|---|
+| None (baseline) | **8.3** | 25.9 |
+| 📢 Advertising campaign (p × 3) | **4.9** | 17.9 |
+| 🤝 Referral cashback (q × 2) | **6.1** | 15.1 |
+| 📢 + 🤝 Both | **4.0** | 10.5 |
+
+➡️ Advertising has the bigger effect on reaching the **first half** of the market. Cashback mainly speeds up the **last stragglers** (shorter tail), because word-of-mouth gets stronger as more friends adopt.
+
+### E7: Who should we target first? *(scale-free network, very low advertising p = 0.005, 30 runs each)*
+
+| Seed strategy | Weeks to 50% adoption |
+|---|---|
+| No seeding | **15.2** |
+| 10 random people | **13.2** |
+| ⭐ 10 top influencers | **7.5** |
+
+➡️ Giving UPI to the **10 most-connected people** makes the market reach 50% **twice as fast**. Seeding 10 random people barely helps. This is a policy insight an aggregate equation cannot produce, because it has no network.
+
+### E5: Does the network structure matter? *(30 runs each)*
+
+| Network | Weeks to 50% | Weeks until everyone adopts |
+|---|---|---|
+| Fully mixed (classical Bass) | 7.5 | 21.4 |
+| Scale-free (influencers) | 8.0 | 23.0 |
+| Small-world | 8.2 | 30.6 |
+| Random | 8.2 | 91.2 |
+
+➡️ The networks reach 50% at similar speeds, but the **tail** is very different. In a random network some people have **no friends at all**, so they can only be reached by advertising and adopt very late. Local interaction slows full adoption compared with the classical "everyone sees everyone" assumption.
+
+### Comparison with the book (Ch. 7.3.4)
+- ✅ The model reproduces the **S-shaped adoption curve** (qualitative validation, Ch. 8).
+- ✅ **p (advertising)** has the strongest effect on speed, as the book finds.
+- ✅ Higher **q** speeds adoption but with diminishing effect.
 
 ---
 
@@ -148,7 +173,7 @@ Each configuration is repeated over **multiple runs (e.g., 50)** and averaged, b
  Phase 1        Phase 2         Phase 3          Phase 4           Phase 5          Phase 6
  Study    ──▶   Design    ──▶   Build in   ──▶   Experiment  ──▶   Validate   ──▶   Present
  the book       the model       NetLogo          (BehaviorSpace)   & analyse        & report
-   ✅              ✅              🔄                 ⏳                ⏳               ⏳
+   ✅              ✅              ✅                 🔄                🔄               ⏳
 ```
 
 ### ✅ Phase 1: Literature Study (reference book)
@@ -160,32 +185,32 @@ Each configuration is repeated over **multiple runs (e.g., 50)** and averaged, b
 - [x] Ch. 8–9: empirical validation and estimation (overview)
 
 ### ✅ Phase 2: Model Design
-- [x] Define problem statement and economic question
-- [x] Choose agents, environment, state variables, and behavioural rule (`p + q·A`)
-- [x] Fix parameters and default values (from the book)
-- [x] Decide outputs: S-curve, new adopters per tick, time to 50% adoption
+- [x] Problem statement and economic question
+- [x] Agents, environment, state variables, behavioural rule (`p + q·A`)
+- [x] Parameters and default values (from the book)
+- [x] Outputs: S-curve, new adopters per week, time to 50% adoption
 
-### 🔄 Phase 3: Implementation in NetLogo *(current phase)*
-- [ ] Build the interface: sliders, choosers, buttons, plots, monitors
-- [ ] Write `setup`: create agents and build the network
-- [ ] Write `go`: the adoption rule, colour change, plot updates
-- [ ] Add heterogeneous agents and seeding strategies
-- [ ] Test and debug (check that p = 0 and no seeds means no adoption, etc.)
+### ✅ Phase 3: Implementation in NetLogo
+- [x] Interface: 9 controls, 3 buttons, 12 monitors, 4 plots, colour legend
+- [x] `setup`: agents + 4 network types (small-world, random, scale-free, fully mixed)
+- [x] `go`: synchronous adoption rule, innovator/imitator colouring, classical Bass benchmark
+- [x] Heterogeneous agents, policies and seeding strategies
+- [x] Tested: compiles and runs in NetLogo 6.4 (GUI and headless)
 
-### ⏳ Phase 4: Experiments
-- [ ] Set up BehaviorSpace experiments E1–E6
-- [ ] Run each configuration multiple times and export results to CSV
-- [ ] Plot the average curves
+### 🔄 Phase 4: Experiments *(current phase)*
+- [x] BehaviorSpace experiments E1–E7 built into the model
+- [x] E5 (networks), E6 (policies), E7 (seeding) run, results exported to CSV
+- [ ] E2 (vary p), E3 (vary q), E1 (baseline over 50 runs), E4 (vary friends 1–30)
+- [ ] Charts of the averaged curves for the report
 
-### ⏳ Phase 5: Validation & Analysis
-- [ ] **Qualitative validation** (Ch. 8): does the model reproduce the S-shaped adoption pattern seen for real products?
-- [ ] Compare our results with the book's sensitivity-analysis findings
-- [ ] Interpret the policy experiments: which policy speeds up digital-payment adoption the most?
+### 🔄 Phase 5: Validation & Analysis
+- [x] Qualitative validation: the model reproduces the S-shaped adoption pattern
+- [x] Comparison with the book's sensitivity-analysis findings
+- [ ] Compare the simulated curve with real UPI adoption trends (input/output validation, Ch. 8)
 
 ### ⏳ Phase 6: Presentation & Report
-- [ ] Final presentation with live demo of the NetLogo model
+- [ ] Final presentation with live demo
 - [ ] Short report: problem, model, experiments, results, conclusion
-- [ ] Upload final `.nlogo` file, results, and screenshots to this repository
 
 ---
 
@@ -194,12 +219,12 @@ Each configuration is repeated over **multiple runs (e.g., 50)** and averaged, b
 | Book chapter | Concept | Where it appears in our project |
 |---|---|---|
 | Ch. 1–2 | Economy as a complex system of heterogeneous interacting agents; emergence | Market-level S-curve emerges from individual decisions |
-| Ch. 2.5 | Schelling's segregation model implemented in NetLogo | Shows NetLogo is a standard ABM tool; same "simple rules → complex outcome" idea |
-| Ch. 3 | ABMs as recursive systems `x(t+1) = f(x(t), …)` | Our `go` procedure updates every agent's state each tick |
+| Ch. 2.5 | Schelling's segregation model implemented in NetLogo | NetLogo is a standard ABM tool; same "simple rules → complex outcome" idea |
+| Ch. 3 | ABMs as recursive systems `x(t+1) = f(x(t), …)` | The `go` procedure updates every agent's state each week |
 | Ch. 4–5 | Bounded rationality, heuristics, social learning | Agents imitate friends instead of optimising |
-| Ch. 6 | Local interaction and networks (random, small-world) | Social network connecting the agents |
-| Ch. 7 | Bass diffusion with local interaction; sensitivity analysis | Core model and experiments E1–E6 |
-| Ch. 8 | Empirical validation (qualitative output validation) | Checking the S-curve against real adoption patterns |
+| Ch. 6 | Local interaction and networks (random, small-world) | Four network types connecting the agents |
+| Ch. 7 | Bass diffusion with local interaction (Eq. 7.7, 7.9); sensitivity analysis | Core rule, the rate plot, and experiments E1–E7 |
+| Ch. 8 | Empirical validation (qualitative output validation) | S-curve check; comparison with the book's findings |
 
 ---
 
@@ -210,32 +235,33 @@ Each configuration is repeated over **multiple runs (e.g., 50)** and averaged, b
 | One equation for the whole market | Rules for each individual |
 | Everyone identical | Agents can be heterogeneous |
 | Everyone influenced by the whole population | Agents influenced by their own friends (network) |
-| Cannot test "target the influencers" | Can test seeding strategies directly |
+| Cannot test "target the influencers" | Can test seeding strategies directly (E7: 2× faster) |
 | Result is calculated | Result **emerges** and can be watched live |
 
 ---
 
-## 10. Repository Structure (planned)
+## 10. Repository Structure
 
 ```
 agent-based-modeling-in-economics/
-├── README.md                 ← project overview (this file)
+├── README.md                          ← project overview (this file)
 ├── model/
-│   └── upi-adoption.nlogo    ← NetLogo simulation (Phase 3)
+│   └── upi-adoption.nlogo             ← the NetLogo simulation (code, interface, Info tab, BehaviorSpace)
 ├── experiments/
-│   └── results/*.csv         ← BehaviorSpace outputs (Phase 4)
-├── screenshots/              ← interface & result plots
-└── presentation/             ← slides (Phase 6)
+│   └── results/*.csv                  ← BehaviorSpace outputs
+└── screenshots/                       ← interface screenshots from the running model
 ```
 
 ---
 
-## 11. How to Run (once the model is uploaded)
+## 11. How to Run
 
-1. Install **NetLogo** (free) from https://ccl.northwestern.edu/netlogo/, or open **NetLogo Web** in a browser.
-2. Open `model/upi-adoption.nlogo`.
-3. Set the sliders (or keep the defaults), click **Setup**, then **Go**.
-4. Watch agents turn green and the S-curve form in the plot.
+1. Install **NetLogo 6.4** (free) from https://ccl.northwestern.edu/netlogo/. Newer NetLogo 7 versions can also open `.nlogo` files.
+2. Download this repository (**Code → Download ZIP**) and open `model/upi-adoption.nlogo`.
+3. Click **Setup**, then **Go**. Use **Step** to move one week at a time.
+4. Try changing **p**, **q**, the **network type**, a **policy**, or **seed strategy → Top influencers**, then click Setup and Go again.
+5. To repeat the experiments: **Tools → BehaviorSpace →** choose E1–E7 **→ Run**.
+6. The **Info** tab inside the model explains everything in detail.
 
 ---
 
@@ -245,4 +271,5 @@ agent-based-modeling-in-economics/
 2. Bass, F. M. (1969). A New Product Growth for Model Consumer Durables. *Management Science*, 15(5), 215–227.
 3. Mahajan, V., Muller, E., & Bass, F. M. (1995). Diffusion of New Products: Empirical Generalizations and Managerial Uses. *Marketing Science*, 14(3).
 4. Watts, D. J., & Strogatz, S. H. (1998). Collective dynamics of "small-world" networks. *Nature*, 393, 440–442.
-5. Wilensky, U. (1999). *NetLogo*. Center for Connected Learning and Computer-Based Modeling, Northwestern University.
+5. Barabási, A.-L., & Albert, R. (1999). Emergence of scaling in random networks. *Science*, 286, 509–512.
+6. Wilensky, U. (1999). *NetLogo*. Center for Connected Learning and Computer-Based Modeling, Northwestern University.
