@@ -34,7 +34,7 @@
 
 * * *
 
-> **Project status:** The NetLogo simulation is **complete and working** (tested in NetLogo 6.4). Policy, network and influencer-seeding experiments have been run, and their results are below. The remaining work is parameter sweeps, validation against real data, and the final report. See the [roadmap](#16-project-roadmap).
+> **Project status:** The NetLogo simulation is **complete and working** (tested in NetLogo 6.4 and 7.0). Five of the seven experiments (advertising, word-of-mouth, network, policy and influencer seeding) have been run, and their results are below. The remaining work is two experiments, validation against real data, and the final report. See the [roadmap](#16-project-roadmap).
 
 ![UPI Adoption Simulator running in NetLogo: adoption taking off at week 7](screenshots/02-takeoff-small-world.png)
 
@@ -241,8 +241,8 @@ All experiments are built into the model (**Tools → BehaviorSpace**). Each con
 | ID | Experiment | What varies | Runs | Status |
 |---|---|---|---|---|
 | E1 | Baseline S-curve | — (book reference values) | 50 | ⬜ To run |
-| E2 | Advertising effect | `p` from 0.01 to 0.20 | 20 per value | ⬜ To run |
-| E3 | Word-of-mouth effect | `q` from 0 to 1 | 20 per value | ⬜ To run |
+| E2 | Advertising effect | `p` from 0.01 to 0.20 | 20 per value | ✅ Done |
+| E3 | Word-of-mouth effect | `q` from 0 to 1 | 20 per value | ✅ Done |
 | E4 | Connectivity effect | `avg-links` from 1 to 30 | 20 per value | ⬜ To run |
 | E5 | Network structure | 4 network types | 30 each | ✅ Done |
 | E6 | Policy comparison | 4 policies | 30 each | ✅ Done |
@@ -253,6 +253,24 @@ All experiments are built into the model (**Tools → BehaviorSpace**). Each con
 ## 14. Results
 
 Raw data: [`experiments/results/`](experiments/results)
+
+### E2: How much does advertising (p) matter?
+*Small-world network, q = 0.4, n = 5, 20 runs per value*
+
+| p (advertising) | 0.01 | 0.02 | 0.03 | 0.05 | 0.10 | 0.15 | 0.20 |
+|---|---|---|---|---|---|---|---|
+| **Weeks to 50% adoption** | 13.1 | 10.1 | 8.2 | 6.2 | 4.3 | 3.0 | 3.0 |
+
+> **Insight:** Advertising has a **very strong effect when it is low**: going from p = 0.01 to 0.03 saves about 5 weeks. Above about p = 0.15 the gains stop (**diminishing returns**). Extra ad spending after that point is wasted. This matches the book's finding that p has the strongest effect "for small p" (Ch. 7.3.4).
+
+### E3: How much does word-of-mouth (q) matter?
+*Small-world network, p = 0.03, n = 5, 20 runs per value*
+
+| q (word-of-mouth) | 0 | 0.1 | 0.2 | 0.4 | 0.6 | 0.8 | 1.0 |
+|---|---|---|---|---|---|---|---|
+| **Weeks to 50% adoption** | 23.6 | 14.1 | 10.9 | 8.5 | 7.0 | 6.2 | 5.8 |
+
+> **Insight:** Without word-of-mouth (q = 0), reaching 50% takes **23.6 weeks**. The first bit of social influence (q = 0.1) cuts this by 40%. After that, each increase helps less and less, and the curves become very similar for high q, exactly as in the book (Fig. 7.2).
 
 ### E6: Which policy works best?
 *Small-world network, p = 0.03, q = 0.4, 30 runs each*
@@ -295,7 +313,8 @@ Raw data: [`experiments/results/`](experiments/results)
 |---|---|
 | Diffusion follows an S-shaped curve | ✅ Reproduced (qualitative output validation, Ch. 8) |
 | Everyone eventually adopts when p > 0 | ✅ Reproduced in every run |
-| p (external influence) strongly speeds adoption | ✅ Confirmed by E6 (advertising campaign) |
+| p (external influence) strongly speeds adoption | ✅ Confirmed by E2 and E6 |
+| Higher q speeds adoption, with diminishing effect | ✅ Confirmed by E3 |
 | Network structure changes adoption dynamics | ✅ Confirmed by E5 and E7 |
 
 ## 15. Mapping to the Reference Book
@@ -339,8 +358,8 @@ flowchart LR
 | | Heterogeneous agents, policies, seeding strategies | ✅ Done |
 | | Testing in NetLogo 6.4 (GUI and headless) | ✅ Done |
 | **4. Experiments** | BehaviorSpace experiments E1–E7 built into the model | ✅ Done |
-| | E5 networks, E6 policies, E7 seeding: run and exported | ✅ Done |
-| | E1 baseline, E2 vary p, E3 vary q, E4 vary friends | ⬜ To do |
+| | E2 vary p, E3 vary q, E5 networks, E6 policies, E7 seeding: run and exported | ✅ Done |
+| | E1 baseline (50 runs), E4 vary number of friends | ⬜ To do |
 | | Charts of averaged results for the report | ⬜ To do |
 | **5. Validation** | Qualitative validation: S-curve reproduced | ✅ Done |
 | | Comparison with the book's findings | ✅ Done |
@@ -358,6 +377,8 @@ agent-based-modeling-in-economics/
 │                                          # Info tab and BehaviorSpace experiments
 ├── experiments/
 │   └── results/
+│       ├── E2-advertising-vary-p.csv      # Sensitivity to advertising (p)
+│       ├── E3-word-of-mouth-vary-q.csv    # Sensitivity to word-of-mouth (q)
 │       ├── E5-network-structure.csv       # Network comparison results
 │       ├── E6-policy-comparison.csv       # Policy comparison results
 │       └── E7-seeding-influencers.csv     # Seeding strategy results
@@ -373,9 +394,9 @@ agent-based-modeling-in-economics/
 
 | Step | Action |
 |---|---|
-| 1 | Install **NetLogo 6.4** (free) from [ccl.northwestern.edu/netlogo](https://ccl.northwestern.edu/netlogo/). Newer NetLogo 7 versions can also open `.nlogo` files. |
-| 2 | Download this repository (**Code → Download ZIP**) and extract it |
-| 3 | Open `model/upi-adoption.nlogo` in NetLogo |
+| 1 | Install **NetLogo 6.4** (free) from [ccl.northwestern.edu/netlogo](https://ccl.northwestern.edu/netlogo/). Also tested in NetLogo 7.0, which opens the `.nlogo` file directly. |
+| 2 | Download this repository (green **Code** button → **Download ZIP**) and extract it, or open `model/upi-adoption.nlogo` on GitHub and click the **Download raw file** button |
+| 3 | In NetLogo, use **File → Open** and select `model/upi-adoption.nlogo`. Don't copy-paste the file into the Code tab: the file also contains the interface and experiments. |
 | 4 | Click **Setup**, then **Go**. Use **Step** to advance one week at a time |
 | 5 | Change `p`, `q`, `network-type`, `policy` or `seed-strategy`, then click **Setup** and **Go** again |
 | 6 | To reproduce the experiments: **Tools → BehaviorSpace →** select E1–E7 **→ Run** |
